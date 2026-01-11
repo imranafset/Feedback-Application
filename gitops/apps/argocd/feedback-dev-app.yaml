@@ -7,9 +7,9 @@ spec:
   project: default
   
   source:
-  repoURL: https://github.com/imranafset/Feedback-Application.git
-  targetRevision: main
-  path: gitops/apps/feedback-dev
+    repoURL: https://github.com/imranafset/Feedback-Application.git
+    targetRevision: main
+    path: gitops/apps/feedback-dev
 
   destination:
     server: https://kubernetes.default.svc
