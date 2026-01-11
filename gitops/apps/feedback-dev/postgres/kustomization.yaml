@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - pv.yaml
-  - pvc.yaml
   - secret.yaml
   - service.yaml
   - statefulset.yaml

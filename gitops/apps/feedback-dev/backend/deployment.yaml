@@ -1,5 +1,5 @@
 apiversion: apps/v1
-kind: deployment
+kind: Deployment
 metadata:
   name: backend
 spec:
