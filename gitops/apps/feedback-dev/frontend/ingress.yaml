@@ -5,14 +5,23 @@ metadata:
   namespace: feedback-dev
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
   - host: feedback-dev.example.com
     http:
       paths:
-      - path: /
-        pathType: Prefix
+      #1. Route for API/Backend
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: backend
+            port:
+              number: 80
+      #2. Route for Frontend
+      - path: /(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: frontend
