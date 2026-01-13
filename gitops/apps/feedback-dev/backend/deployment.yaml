@@ -14,20 +14,14 @@ spec:
     spec:
       containers:
         - name: backend
-          image: postgres:15
+          image: faizalaccounts/feedback-backend:v1
           ports:
             - containerPort: 8080
           env:
             - name: DB_HOST
               value: "postgres"
             - name: DB_PORT
-              value: "5432"
-            # the Image needs this specific variable to stay alive
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_PASSWORD  
+              value: "5432"      
             # Pull the rest from the secret you already created
             - name: DB_NAME
               valueFrom:
