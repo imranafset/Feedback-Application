@@ -3,6 +3,7 @@ kind: StatefulSet
 metadata:
   name: rabbitmq
 spec:
+  serviceName: "rabbitmq"
   replicas: 1
   selector:
     matchLabels:
@@ -16,7 +17,7 @@ spec:
         - name: rabbitmq
           image: rabbitmq:3-management
           ports:
-            - containerPort: 5672
             - name: amqp
-            - containerPort: 15672
-              name: management
+              containerPort: 5672
+            - name: management
+              containerPort: 15672
