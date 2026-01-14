@@ -7,3 +7,4 @@ resources:
   - backend/
   - frontend/
   - rabbitmq/
+  - worker/
