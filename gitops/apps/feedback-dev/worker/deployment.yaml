@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: worker
-        image: faizalaccounts/feedback-worker:v1
+        image: faizalaccounts/feedback-worker:v2
         env:
           - name: DB_HOST
             value: "postgres"
