@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: faizalaccount/feedback-backend:v2
+          image: faizalaccount/feedback-backend:v3
           ports:
             - containerPort: 8080
           env:
