@@ -10,7 +10,7 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - feedback-dev.example.local.common
+        - feedback-dev.example.com
       secretName: feedback-tls-cert
   rules:
     - host: feedback-dev.example.com
