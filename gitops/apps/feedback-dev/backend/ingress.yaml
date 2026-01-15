@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: feedback-ingress
+  namespace: feedback-dev
+  annotations:
+    cert-manager.io/cluster-issuer: "feedback-ca-issuer"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - feedback-dev.example.local.common
+      secretName: feedback-tls-cert
+  rules:
+    - host: feedback-dev.example.com
+      http:
+        paths:
+        - path: /api(/|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: backend
+              port:
+                number: 8080
