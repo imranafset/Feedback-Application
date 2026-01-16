@@ -3,8 +3,8 @@ stages:
   - test
 
 variables:
-  DOCKER_IMAGE_BACKEND: "$DOCKER_USER/feedback-backend:latest"
-  DOCKER_IMAGE_WORKER: "$DOCKER_USER/feedback-worker:latest"
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
 
 # 1. Build & Push to Docker Hub
 build_images:
@@ -15,20 +15,18 @@ build_images:
   services:
     - name: docker:24.0.5-dind
       command: ["--tls=false"]
-
-  variables:
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_TLS_CERTDIR: ""    
   script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
-    - docker build -t $DOCKER_USER/feedback-backend:latest ./backend
-    - docker build -t $DOCKER_USER/feedback-worker:latest ./worker
-    - docker push $DOCKER_USER/feedback-backend:latest
-    - docker push $DOCKER_USER/feedback-worker:latest
+    - docker build -t "$DOCKER_USER/feedback-backend:latest" ./backend
+    - docker build -t "$DOCKER_USER/feedback-worker:latest" ./worker
+    - docker push "$DOCKER_USER/feedback-backend:latest"
+    - docker push "$DOCKER_USER/feedback-worker:latest"
 
 # 2. Security & Quality Scan
 sonarqube_scan:
   stage: test
+  tags:
+    - dev-laptop
   image: 
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
