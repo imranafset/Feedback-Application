@@ -9,15 +9,16 @@ variables:
 # 1. Build & Push to Docker Hub
 build_images:
   stage: build
+    - dev-ubuntu
   image: docker:24.0.5
   services:
     - docker:24.0.5-dind
   script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
-    - docker build -t $DOCKER_IMAGE_BACKEND ./backend
-    - docker build -t $DOCKER_IMAGE_WORKER ./worker
-    - docker push $DOCKER_IMAGE_BACKEND
-    - docker push $DOCKER_IMAGE_WORKER
+    - docker build -t $DOCKER_USER/feedback-backend:latest ./backend
+    - docker build -t $DOCKER_USER/feedback-worker:latest ./worker
+    - docker push $DOCKER_USER/feedback-backend:latest
+    - docker push $DOCKER_USER/feedback-worker:latest
 
 # 2. Security & Quality Scan
 sonarqube_scan:
