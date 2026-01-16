@@ -9,6 +9,7 @@ variables:
 # 1. Build & Push to Docker Hub
 build_images:
   stage: build
+  tags:
     - dev-laptop
   image: docker:24.0.5
   services:
