@@ -17,7 +17,7 @@ build_images:
   script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
     # Now that files are moved, the path is simply ./backend
-    - docker build -t "$DOCKER_USER/feedback-backend:latest" ./backend
+    - docker build -t "$DOCKER_USER/feedback-backend:latest" ./gitops/apps/feedback-dev/backend
     - docker push "$DOCKER_USER/feedback-backend:latest"
 
 # 2. Security & Quality Scan
