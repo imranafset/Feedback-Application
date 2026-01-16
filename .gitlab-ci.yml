@@ -1,6 +1,3 @@
-default:
-  tags:
-    - ""  # This tells it to look for any runner that accepts untagged jobs (Your Laptop)
 stages:
   - build
   - test
