@@ -35,6 +35,6 @@ sonarqube_scan:
     - sonar-scanner 
       -Dsonar.projectKey=Feedback-App 
       -Dsonar.sources=./gitops/apps/feedback-dev/backend
-      -Dsonar.host.url=$SONAR_URL 
+      -Dsonar.host.url=$SONAR_HOST_URL 
       -Dsonar.login=$SONAR_TOKEN
   allow_failure: true    
