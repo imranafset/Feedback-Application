@@ -33,8 +33,7 @@ sonarqube_scan:
     GIT_DEPTH: "0"  # This pulls all history so SonarQube is happy
   script:
     - sonar-scanner 
-      -Dsonar.projectKey=Feedback-App 
+      -Dsonar.projectKey=Feedback-Application
       -Dsonar.sources=./gitops/apps/feedback-dev/backend
       -Dsonar.host.url=$SONAR_HOST_URL 
-      -Dsonar.login=$SONAR_TOKEN
-  allow_failure: true    
+      -Dsonar.login=$SONAR_TOKEN   
