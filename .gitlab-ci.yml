@@ -1,0 +1,37 @@
+stages:
+  - build
+  - test
+
+variables:
+  DOCKER_IMAGE_BACKEND: "$DOCKER_USER/feedback-backend:latest"
+  DOCKER_IMAGE_WORKER: "$DOCKER_USER/feedback-worker:latest"
+
+# 1. Build & Push to Docker Hub
+build_images:
+  stage: build
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
+    - docker build -t $DOCKER_IMAGE_BACKEND ./backend
+    - docker build -t $DOCKER_IMAGE_WORKER ./worker
+    - docker push $DOCKER_IMAGE_BACKEND
+    - docker push $DOCKER_IMAGE_WORKER
+
+# 2. Security & Quality Scan
+sonarqube_scan:
+  stage: test
+  image: 
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  script:
+    - sonar-scanner 
+      -Dsonar.projectKey=Feedback-App 
+      -Dsonar.sources=. 
+      -Dsonar.host.url=$SONAR_URL 
+      -Dsonar.login=$SONAR_TOKEN
+  allow_failure: true
