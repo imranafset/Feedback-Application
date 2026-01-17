@@ -1,5 +1,5 @@
 stages:
-  - build
+  - build 
   - test
 
 # 1. Build & Push to Docker Hub
@@ -15,10 +15,21 @@ build_images:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
   script:
+    #Docker hub login
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
-    # Now that files are moved, the path is simply ./backend
+
+    # Backend Docker Image build and push
     - docker build -t "$DOCKER_USER/feedback-backend:latest" ./gitops/apps/feedback-dev/backend
     - docker push "$DOCKER_USER/feedback-backend:latest"
+
+    # Worker Docker Image build and push
+    - docker build -t "$DOCKER_USER/feedback-worker:latest" ./gitops/apps/feedback-dev/worker
+    - docker push "$DOCKER_USER/feedback-worker:latest"
+
+    #Frontend Docker Image build and push
+    - docker build -t "$DOCKER_USER/feedback-frontend:latest" ./gitops/apps/feedback-dev/frontend
+    - docker push "$DOCKER_USER/feedback-worker:latest"
+
 
 # 2. Security & Quality Scan
 sonarqube_scan:
