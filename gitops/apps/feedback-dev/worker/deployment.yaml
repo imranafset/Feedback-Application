@@ -16,6 +16,7 @@ spec:
       containers:
       - name: worker
         image: faizalaccount/feedback-worker:latest
+        imagePullPolicy: Always
         env:
           - name: DB_HOST
             value: "postgres"

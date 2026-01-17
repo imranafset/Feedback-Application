@@ -1,5 +1,9 @@
+npm-debug.log
 node_modules
 .git
 *.yaml
 Dockerfile
 .env
+.DS_Store
+dist
+
