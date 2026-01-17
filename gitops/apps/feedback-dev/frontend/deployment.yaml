@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: faizalaccount/feedback-frontend:latest
+          image: faizalaccount/feedback-frontend:v1
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
