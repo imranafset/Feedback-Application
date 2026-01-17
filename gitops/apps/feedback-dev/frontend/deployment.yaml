@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: nginx
+          image: faizalaccount/feedback-frontend:latest
           ports:
             - containerPort: 80
