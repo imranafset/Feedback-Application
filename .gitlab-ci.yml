@@ -27,8 +27,8 @@ build_images:
     - docker push "$DOCKER_USER/feedback-worker:latest"
 
     #Frontend Docker Image build and push
-    - docker build -t "$DOCKER_USER/feedback-frontend:latest" ./gitops/apps/feedback-dev/frontend
-    - docker push "$DOCKER_USER/feedback-frontend:latest"
+    - docker build -t "$DOCKER_USER/feedback-frontend:v1" ./gitops/apps/feedback-dev/frontend
+    - docker push "$DOCKER_USER/feedback-frontend:v1"
 
 
 # 2. Security & Quality Scan
