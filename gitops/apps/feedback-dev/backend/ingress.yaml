@@ -16,6 +16,7 @@ spec:
     - host: feedback-dev.example.com
       http:
         paths:
+        # This is to route for backend API
         - path: /api(/|$)(.*)
           pathType: ImplementationSpecific
           backend:
@@ -23,3 +24,11 @@ spec:
               name: backend
               port:
                 number: 8080
+        #This is to route frontend UI
+        - path: /()(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: frontend
+              port: 
+                number:3000
