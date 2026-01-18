@@ -47,6 +47,5 @@ sonarqube_scan:
       -Dsonar.projectKey=Feedback-Application
       -Dsonar.sources=./gitops/
       -Dsonar.host.url=$SONAR_HOST_URL 
-      -Dsonar.login=$SONAR_TOKEN 
-      -Dsonar.qualitygate.wait=true  
+      -Dsonar.login=$SONAR_TOKEN
       -allow_failure=true
