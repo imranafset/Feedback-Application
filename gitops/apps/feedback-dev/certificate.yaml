@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: feedback-tls-cert # Must match the secretName in your Ingress
+  namespace: feedback-dev
+spec:
+  secretName: feedback-tls-cert # This is the Secret Nginx will look for
+  issuerRef:
+    name: feedback-ca-issuer   # Ensure this matches your ClusterIssuer name
+    kind: ClusterIssuer
+  commonName: feedback-dev.example.com
+  dnsNames:
+  - feedback-dev.example.com

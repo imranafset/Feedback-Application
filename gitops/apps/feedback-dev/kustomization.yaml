@@ -8,3 +8,4 @@ resources:
   - frontend/
   - rabbitmq/
   - worker/
+  - certificate.yaml
