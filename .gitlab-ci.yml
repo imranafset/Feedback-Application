@@ -48,4 +48,4 @@ sonarqube_scan:
       -Dsonar.sources=./gitops/
       -Dsonar.host.url=$SONAR_HOST_URL 
       -Dsonar.login=$SONAR_TOKEN
-      -allow_failure=true
+  allow_failure: true
