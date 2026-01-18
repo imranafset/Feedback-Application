@@ -49,4 +49,4 @@ sonarqube_scan:
       -Dsonar.host.url=$SONAR_HOST_URL 
       -Dsonar.login=$SONAR_TOKEN 
       -Dsonar.qualitygate.wait=true  
-       allow_failure: true
+      -allow_failure=true
