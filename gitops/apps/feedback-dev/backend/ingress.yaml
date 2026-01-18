@@ -4,31 +4,31 @@ metadata:
   name: feedback-ingress
   namespace: feedback-dev
   annotations:
-    cert-manager.io/cluster-issuer: "feedback-ca-issuer"
+    # Add these three to force Nginx to notice the resource
     kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "feedback-ca-issuer"
 spec:
   ingressClassName: nginx
   tls:
-    - hosts:
-        - feedback-dev.example.com
-      secretName: feedback-tls-cert
+  - hosts:
+    - feedback-dev.example.com
+    secretName: feedback-tls-cert
   rules:
-    - host: feedback-dev.example.com
-      http:
-        paths:
-        # This is to route for backend API
-        - path: /api
-          pathType: Prefix
-          backend:
-            service:
-              name: backend
-              port:
-                number: 80
-        #This is to route frontend UI
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: frontend
-              port: 
-                number: 80
+  - host: feedback-dev.example.com
+    http:
+      paths:
+      - path: /api
+        pathType: ImplementationSpecific # Use this for broader matching
+        backend:
+          service:
+            name: backend
+            port:
+              number: 8080
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
