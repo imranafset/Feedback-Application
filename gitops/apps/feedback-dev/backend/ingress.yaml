@@ -4,31 +4,31 @@ metadata:
   name: feedback-ingress
   namespace: feedback-dev
   annotations:
-    # Add these three to force Nginx to notice the resource
+    # This annotation is the "legacy" trigger that often works 
+    # when the ingressClassName alone fails in MicroK8s
     kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/rewrite-target: /
     cert-manager.io/cluster-issuer: "feedback-ca-issuer"
 spec:
-  ingressClassName: nginx
+  ingressClassName: nginx 
   tls:
-  - hosts:
-    - feedback-dev.example.com
-    secretName: feedback-tls-cert
+    - hosts:
+        - feedback-dev.example.com
+      secretName: feedback-tls-cert
   rules:
-  - host: feedback-dev.example.com
-    http:
-      paths:
-      - path: /api
-        pathType: ImplementationSpecific # Use this for broader matching
-        backend:
-          service:
-            name: backend
-            port:
-              number: 8080
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: frontend
-            port:
-              number: 80
+    - host: feedback-dev.example.com
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix # Changed from null/ImplementationSpecific
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 8080
+          - path: /
+            pathType: Prefix # Changed from null/ImplementationSpecific
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
