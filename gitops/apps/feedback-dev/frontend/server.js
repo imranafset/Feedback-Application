@@ -5,7 +5,7 @@ const app = express();
 // The Frontend needs to know where the Backend is
 // In Kubernetes, we will use the Backend's Service name
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http//feedback-backend:8080';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://backend:80';
 
 app.use(express.static('public'));
 
