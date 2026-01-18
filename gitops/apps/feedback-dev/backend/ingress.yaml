@@ -23,7 +23,7 @@ spec:
             service:
               name: backend
               port:
-                number: 8080
+                number: 80
         #This is to route frontend UI
         - path: /
           pathType: Prefix
