@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - infrastructure/cert-manager
   - apps/feedback-dev
+  - infrastructure/ingress-class.yaml
