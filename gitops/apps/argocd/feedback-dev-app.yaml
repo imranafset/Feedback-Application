@@ -15,9 +15,18 @@ spec:
     server: https://kubernetes.default.svc
     namespace: feedback-dev
 
+  # Add this section to fix form submit
+  ignoreDifferences:
+    - group: cert-manager.io
+      kind: Certificate
+      jsonPointers:
+        - /status
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      # Add this sync option 
+      - RespectIgnoreDifferences=true

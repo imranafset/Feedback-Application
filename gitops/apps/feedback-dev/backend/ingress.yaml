@@ -21,14 +21,14 @@ spec:
     - host: feedback-dev.example.com
       http:
         paths:
-          - path: /api
+          - path: /api(/|$)(.*) #This capture everything after /api/
             pathType: Prefix
             backend:
               service:
                 name: backend
                 port:
-                  number: 8080
-          - path: /
+                  number: 80 # The port defined in the Service.yaml
+          - path: /()(.*) # This captures everything else
             pathType: Prefix
             backend:
               service:
