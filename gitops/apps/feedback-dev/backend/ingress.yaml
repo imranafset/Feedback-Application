@@ -4,34 +4,28 @@ metadata:
   name: feedback-ingress
   namespace: feedback-dev
   annotations:
-    # Forces the Nginx controller to "claim" this ingress
-    kubernetes.io/ingress.class: "nginx"
-    # Links the Ingress to your Cert-Manager issuer
-    cert-manager.io/cluster-issuer: "feedback-ca-issuer"
-    # Ensures that even if the app uses root paths, Nginx handles them correctly
     nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
-  tls:
-    - hosts:
-        - feedback-dev.example.com
-      # This secret is created by the Certificate.yaml we just made
-      secretName: feedback-tls-cert
   rules:
-    - host: feedback-dev.example.com
-      http:
-        paths:
-          - path: /api(/|$)(.*) #This capture everything after /api/
-            pathType: Prefix
-            backend:
-              service:
-                name: backend
-                port:
-                  number: 80 # The port defined in the Service.yaml
-          - path: /()(.*) # This captures everything else
-            pathType: Prefix
-            backend:
-              service:
-                name: frontend
-                port:
-                  number: 80
+  - host: feedback-dev.example.com
+    http:
+      paths:
+      # 1. Backend Path: Rewrites /api/feedback -> /feedback
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: backend
+            port:
+              number: 80
+
+      # 2. Frontend Path: Rewrites / -> / (using dummy group)
+      - path: /()(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
