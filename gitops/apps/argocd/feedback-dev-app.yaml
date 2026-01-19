@@ -7,7 +7,7 @@ spec:
   project: default
   
   source:
-    repoURL: https://github.com/imranafset/Feedback-Application.git
+    repoURL: https://gitlab.com/imran-devsecops-group/Feedback-Application.git
     targetRevision: main
     path: gitops/apps/feedback-dev
 
