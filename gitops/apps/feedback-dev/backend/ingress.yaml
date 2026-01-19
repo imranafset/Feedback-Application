@@ -9,7 +9,7 @@ metadata:
     # Links the Ingress to your Cert-Manager issuer
     cert-manager.io/cluster-issuer: "feedback-ca-issuer"
     # Ensures that even if the app uses root paths, Nginx handles them correctly
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
   tls:
