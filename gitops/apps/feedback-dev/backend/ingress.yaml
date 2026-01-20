@@ -11,7 +11,7 @@ spec:
   tls:
   - hosts:
     - feedback-dev.example.com
-    secretName: feedback-dev-tls
+    secretName: feedback-tls-secret
   rules:
   - host: feedback-dev.example.com
     http:
