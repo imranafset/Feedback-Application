@@ -4,35 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Feedback Form</title>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .form-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        h2 { color: #333; text-align: center; margin-bottom: 20px; }
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; background-color: #28a745; color: white; padding: 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        button:hover { background-color: #218838; }
-        #status { margin-top: 15px; text-align: center; font-weight: bold; }
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .form-container { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 450px; 
+        }
+        h2 { color: #2d3436; text-align: center; margin-bottom: 25px; font-weight: 600; }
+        label { display: block; margin-bottom: 5px; color: #636e72; font-size: 14px; }
+        input, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 20px; 
+            border: 1px solid #dfe6e9; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus { border-color: #0984e3; outline: none; }
+        button { 
+            width: 100%; 
+            background-color: #00b894; 
+            color: white; 
+            padding: 15px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold;
+            transition: transform 0.2s, background-color 0.2s; 
+        }
+        button:hover { background-color: #00a884; transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+        button:disabled { background-color: #b2bec3; cursor: not-allowed; }
     </style>
 </head>
 <body>
     <div class="form-container">
         <h2>Submit Feedback</h2>
         <form id="feedbackForm">
-            <input type="text" id="name" placeholder="Full Name" required>
-            <input type="email" id="email" placeholder="Email Address" required>
-            <input type="tel" id="phone" placeholder="Phone Number" required>
-            <textarea id="message" rows="4" placeholder="Your Suggestions/Remarks" required></textarea>
-            <button type="submit">Submit Feedback</button>
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="John Doe" required>
+            
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="john@example.com" required>
+            
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" placeholder="+1 234 567 890" required>
+            
+            <label for="message">Message</label>
+            <textarea id="message" rows="4" placeholder="How can we improve?" required></textarea>
+            
+            <button type="submit" id="submitBtn">Send Feedback</button>
         </form>
-        <div id="status"></div>
     </div>
 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
     <script>
-        document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+        const form = document.getElementById('feedbackForm');
+        const btn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const status = document.getElementById('status');
-            status.innerText = "Sending...";
             
+            // Disable button during transit
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+
             const data = {
                 user: document.getElementById('name').value,
                 email: document.getElementById('email').value,
@@ -41,7 +96,6 @@
             };
 
             try {
-                // This calls the Backend API
                 const response = await fetch('/api/feedback', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -49,13 +103,39 @@
                 });
                 
                 if (response.ok) {
-                    status.style.color = "green";
-                    status.innerText = "✅ Success! Thank you.";
-                    document.getElementById('feedbackForm').reset();
-                } else { throw new Error(); }
+                    // Success Notification
+                    Toastify({
+                        text: "🚀 Success! Your feedback is being processed.",
+                        duration: 4000,
+                        gravity: "top",
+                        position: "center",
+                        stopOnFocus: true,
+                        style: {
+                            background: "linear-gradient(to right, #00b894, #55efc4)",
+                            borderRadius: "10px"
+                        }
+                    }).showToast();
+
+                    form.reset();
+                } else { 
+                    throw new Error("Server error"); 
+                }
             } catch (err) {
-                status.style.color = "red";
-                status.innerText = "❌ Error sending feedback.";
+                // Error Notification
+                Toastify({
+                    text: "❌ Error: Could not send feedback. Please try again.",
+                    duration: 5000,
+                    gravity: "top",
+                    position: "center",
+                    style: {
+                        background: "linear-gradient(to right, #d63031, #ff7675)",
+                        borderRadius: "10px"
+                    }
+                }).showToast();
+            } finally {
+                // Re-enable button
+                btn.disabled = false;
+                btn.innerText = "Send Feedback";
             }
         });
     </script>
