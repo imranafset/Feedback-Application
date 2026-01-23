@@ -25,6 +25,9 @@ func main() {
 	// --- Added for Kubernetes Probes ---
 	http.HandleFunc("/healthz", healthHandler)
 
+	// This expose all default Go metrics at (metrics will be scraped by Prometheus)
+    http.Handle("/metrics", promhttp.Handler())
+	
 	port := "8080"
 	fmt.Printf("🚀 Backend API is starting on port %s...\n", port)
 	
