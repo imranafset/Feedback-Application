@@ -4,6 +4,9 @@ WORKDIR /app
 COPY . .
 RUN go mod init feedback-backend || true
 RUN go get github.com/streadway/amqp
+RUN go get github.com/prometheus/client_golang/prometheus/promhttp
+RUN go mod tidy
+
 RUN go build -o main .
 
 # Stage 2: Run the binary
