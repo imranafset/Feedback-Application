@@ -8,9 +8,7 @@ import (
 	"os"
 
 	"github.com/streadway/amqp"
-	"net/http"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/streadway/amqp"
 )
 
 // Feedback structure matches the real feedback form UI
