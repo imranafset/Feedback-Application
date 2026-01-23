@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  namespace: feedback-dev
 spec:
   replicas: 1
   selector:
@@ -18,12 +19,31 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          
+          # --- Health Checks (Probes) ---
+          # Readiness: Ensures the pod doesn't get traffic until it's ready
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          
+          # Liveness: Restarts the container if it freezes or hangs
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          # ------------------------------
+
           env:
+            # Database Configuration
             - name: DB_HOST
               value: "postgres"
             - name: DB_PORT
               value: "5432"      
-            # Pull the rest from the secret you already created
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
@@ -39,3 +59,7 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_PASSWORD
+
+            # RabbitMQ Configuration (Critical for the API to work)
+            - name: RABBITMQ_URL
+              value: "amqp://user:password@rabbitmq-service:5672"
