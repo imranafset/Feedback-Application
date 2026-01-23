@@ -1,10 +1,10 @@
 # Stage 1: Build the Go Binary
 FROM golang:1.21-alpine AS builder
 WORKDIR /app
+COPY go.mod* go.sum* ./
+RUN go mod download || go mod init feedback-backend
 COPY . .
-RUN go mod init feedback-backend || true
 RUN go mod tidy
-
 RUN go build -o main .
 
 # Stage 2: Run the binary
