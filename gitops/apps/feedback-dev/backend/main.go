@@ -8,6 +8,9 @@ import (
 	"os"
 
 	"github.com/streadway/amqp"
+	"net/http"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/streadway/amqp"
 )
 
 // Feedback structure matches the real feedback form UI
@@ -27,7 +30,7 @@ func main() {
 
 	// This expose all default Go metrics at (metrics will be scraped by Prometheus)
     http.Handle("/metrics", promhttp.Handler())
-	
+
 	port := "8080"
 	fmt.Printf("🚀 Backend API is starting on port %s...\n", port)
 	
