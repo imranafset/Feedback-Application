@@ -5,3 +5,4 @@ resources:
   - infrastructure/cert-manager
   - apps/feedback-dev
   - infrastructure/ingress-class.yaml
+  - apps/monitoring

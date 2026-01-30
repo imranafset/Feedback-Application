@@ -1,0 +1,48 @@
+grafana.ini:
+  server:
+    root_url: http://grafana.example.com
+  smtp:
+    enabled: true
+    host: smtp.gmail.com:587
+    user: mi3081557@gmail.com
+    password: "$__env{SMTP_PASSWORD}"
+    from_address: mi3081557@gmail.com
+    starttls_policy: MandatoryStartTLS
+
+envValueFrom:
+  SMTP_PASSWORD:
+    secretKeyRef:
+      name: grafana-smtp
+      key: password
+
+# Auto-connect to Prometheus and Loki
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server.default.svc.cluster.local
+        access: proxy
+        isDefault: true
+      - name: Loki
+        type: loki
+        url: http://loki.default.svc.cluster.local:3100
+        access: proxy
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - grafana.example.com
+  path: /
+
+persistence:
+  enabled: true
+
+securityContext:
+  enabled: true
+  fsGroup: 472
+  runAsUser: 472
