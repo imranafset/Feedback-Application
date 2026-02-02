@@ -2,15 +2,20 @@ loki:
   auth_enabled: false
   commonConfig:
     replication_factor: 1
+  
+  # This section fixes the "429 Too Many Requests" and "Timestamp too old" errors
   limits_config:
     reject_old_samples: true
-    reject_old_samples_max_age: 720h
+    reject_old_samples_max_age: 720h       # Allows logs up to 30 days old
     max_cache_freshness_per_query: 10m
-    ingestion_rate_mb: 25
-    ingestion_burst_size_mb: 50
-    max_streams_per_user: 0
+    ingestion_rate_mb: 25                 # Increased from 10 to handle backlog
+    ingestion_burst_size_mb: 50           # Increased from 20
+    max_streams_per_user: 0               # 0 disables the stream limit (stops the 429s)
+    max_global_streams_per_user: 0
+
   storage:
     type: 'filesystem'
+  
   schemaConfig:
     configs:
       - from: "2024-04-01"
@@ -29,9 +34,21 @@ singleBinary:
     enabled: true
     size: 5Gi
 
-# Promtail collects the logs from your pods
+# Promtail collects logs and is currently struggling with the backlog
 promtail:
   enabled: true
+  
+  # This section helps Promtail stay "Ready" while it processes the backlog
+  readinessProbe:
+    initialDelaySeconds: 60   # Give it a full minute to start up before checking
+    timeoutSeconds: 10
+    periodSeconds: 20
+    failureThreshold: 10      # Be very patient before restarting it
+    
   config:
     clients:
       - url: http://loki:3100/loki/api/v1/push
+    
+    # Ensuring the positions file is stored in a way that survives restarts
+    positions:
+      filename: /run/promtail/positions.yaml
