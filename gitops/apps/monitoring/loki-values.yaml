@@ -1,30 +1,38 @@
 loki:
   auth_enabled: false
-  commonConfig:
-    replication_factor: 1
   
-  # This section fixes the "429 Too Many Requests" and "Timestamp too old" errors
+  # Location 1: Top-level limits (for some chart versions)
   limits_config:
-    reject_old_samples: false
-    max_cache_freshness_per_query: 10m
-    ingestion_rate_mb: 50                 # Increased from 10 to handle backlog
-    ingestion_burst_size_mb: 100           # Increased from 20
-    max_streams_per_user: 0               # 0 disables the stream limit (stops the 429s)
+    max_streams_per_user: 0
     max_global_streams_per_user: 0
-    unordered_writes: true                # Allow out-of-order writes to help with old timestamps
+    ingestion_rate_mb: 100
+    ingestion_burst_size_mb: 200
+    reject_old_samples: false
+    unordered_writes: true
 
-  storage:
-    type: 'filesystem'
-  
-  schemaConfig:
-    configs:
-      - from: "2024-04-01"
-        store: tsdb
-        object_store: filesystem
-        schema: v13
-        index:
-          prefix: loki_index_
-          period: 24h
+  # Location 2: Internal config block (the most likely fix for your 429s)
+  config:
+    limits_config:
+      max_streams_per_user: 0
+      max_global_streams_per_user: 0
+      ingestion_rate_mb: 100
+      ingestion_burst_size_mb: 200
+      reject_old_samples: false
+      unordered_writes: true
+    common:
+      replication_factor: 1
+    storage_config:
+      filesystem:
+        directory: /data/loki/chunks
+    schema_config:
+      configs:
+        - from: "2024-04-01"
+          store: tsdb
+          object_store: filesystem
+          schema: v13
+          index:
+            prefix: loki_index_
+            period: 24h
 
 deploymentMode: SingleBinary
 
@@ -34,21 +42,17 @@ singleBinary:
     enabled: true
     size: 5Gi
 
-# Promtail collects logs and is currently struggling with the backlog
 promtail:
   enabled: true
-  
-  # This section helps Promtail stay "Ready" while it processes the backlog
-  readinessProbe:
-    initialDelaySeconds: 60   # Give it a full minute to start up before checking
-    timeoutSeconds: 10
-    periodSeconds: 20
-    failureThreshold: 10      # Be very patient before restarting it
-    
+  # Force promtail to ignore the old 2025 backlog by giving it a new positions path
   config:
+    positions:
+      filename: /run/promtail/positions_new.yaml
     clients:
       - url: http://loki:3100/loki/api/v1/push
-    
-    # Ensuring the positions file is stored in a way that survives restarts
-    positions:
-      filename: /run/promtail/positions.yaml
+  
+  readinessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 10
+    periodSeconds: 20
+    failureThreshold: 10
