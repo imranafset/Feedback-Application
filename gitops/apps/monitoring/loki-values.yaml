@@ -1,58 +1,41 @@
 loki:
+  enabled: true
   auth_enabled: false
-  
-  # Location 1: Top-level limits (for some chart versions)
-  limits_config:
-    max_streams_per_user: 0
-    max_global_streams_per_user: 0
-    ingestion_rate_mb: 100
-    ingestion_burst_size_mb: 200
-    reject_old_samples: false
-    unordered_writes: true
-
-  # Location 2: Internal config block (the most likely fix for your 429s)
   config:
+    # Basic server setup
+    server:
+      http_listen_port: 3100
+    
+    # Critical fixes for your 429 and out-of-order errors
     limits_config:
+      ingestion_rate_mb: 50
+      ingestion_burst_size_mb: 100
       max_streams_per_user: 0
-      max_global_streams_per_user: 0
-      ingestion_rate_mb: 100
-      ingestion_burst_size_mb: 200
       reject_old_samples: false
+      reject_old_samples_max_age: 168h
+      # Important: 2.6.1 uses this name for unordered writes
       unordered_writes: true
-    common:
-      replication_factor: 1
-    storage_config:
-      filesystem:
-        directory: /data/loki/chunks
+
     schema_config:
       configs:
-        - from: "2024-04-01"
-          store: tsdb
+        - from: "2020-10-24"
+          store: boltdb-shipper
           object_store: filesystem
-          schema: v13
+          schema: v11
           index:
-            prefix: loki_index_
+            prefix: index_
             period: 24h
 
-deploymentMode: SingleBinary
-
-singleBinary:
-  replicas: 1
-  persistence:
-    enabled: true
-    size: 5Gi
+    storage_config:
+      boltdb_shipper:
+        active_index_directory: /data/loki/index
+        cache_location: /data/loki/index_cache
+        resync_interval: 5s
+        shared_store: filesystem
+      filesystem:
+        directory: /data/loki/chunks
 
 promtail:
   enabled: true
-  # Force promtail to ignore the old 2025 backlog by giving it a new positions path
   config:
-    positions:
-      filename: /run/promtail/positions_new.yaml
-    clients:
-      - url: http://loki:3100/loki/api/v1/push
-  
-  readinessProbe:
-    initialDelaySeconds: 60
-    timeoutSeconds: 10
-    periodSeconds: 20
-    failureThreshold: 10
+    loki_address: http://loki:3100/loki/api/v1/push
