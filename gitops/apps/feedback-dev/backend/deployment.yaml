@@ -21,7 +21,6 @@ spec:
             - containerPort: 8080
           
           # --- Health Checks (Probes) ---
-          # Readiness: Ensures the pod doesn't get traffic until it's ready
           readinessProbe:
             httpGet:
               path: /healthz
@@ -29,7 +28,6 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
           
-          # Liveness: Restarts the container if it freezes or hangs
           livenessProbe:
             httpGet:
               path: /healthz
@@ -39,7 +37,7 @@ spec:
           # ------------------------------
 
           env:
-            # Database Configuration
+            # Database Configuration (Postgres)
             - name: DB_HOST
               value: "postgres"
             - name: DB_PORT
@@ -47,7 +45,7 @@ spec:
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
+                  name: postgres-secret  # This name matches your SealedSecret
                   key: POSTGRES_DB
             - name: DB_USER
               valueFrom:
@@ -60,6 +58,17 @@ spec:
                   name: postgres-secret
                   key: POSTGRES_PASSWORD
 
-            # RabbitMQ Configuration (Critical for the API to work)
+            # MongoDB Configuration (If your app uses both or is switching)
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-pass    # This name matches your SealedSecret
+                  key: password
+
+            # RabbitMQ Configuration (Secure version)
+            # Instead of amqp://guest:guest@rabbitmq:5672/
             - name: RABBITMQ_URL
-              value: "amqp://guest:guest@rabbitmq:5672/"
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: url
