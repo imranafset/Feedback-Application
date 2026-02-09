@@ -58,12 +58,6 @@ spec:
                   name: postgres-secret
                   key: POSTGRES_PASSWORD
 
-            # MongoDB Configuration (If your app uses both or is switching)
-            - name: MONGO_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongodb-pass    # This name matches your SealedSecret
-                  key: password
 
             # RabbitMQ Configuration (Secure version)
             # Instead of amqp://guest:guest@rabbitmq:5672/
