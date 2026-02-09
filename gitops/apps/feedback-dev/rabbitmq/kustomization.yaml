@@ -5,4 +5,4 @@ resources:
   - statefulset.yaml
   - service.yaml
   - sealed-rabbitmq-secret.yaml
-  - secret.yaml
+  

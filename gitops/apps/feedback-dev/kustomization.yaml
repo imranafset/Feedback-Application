@@ -9,4 +9,5 @@ resources:
   - rabbitmq/
   - worker/
   - certificate.yaml
-  - secrets/
+  - secrets/sealed-secret.yaml
+  
