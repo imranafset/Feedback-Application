@@ -3,6 +3,6 @@ kind: Kustomization
 
 resources:
   - pv.yaml
-  - secret.yaml
   - service.yaml
   - statefulset.yaml
+  - sealed-postgres-secret.yaml
