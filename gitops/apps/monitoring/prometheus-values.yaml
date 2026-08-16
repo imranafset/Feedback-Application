@@ -24,7 +24,7 @@ alertmanagerFiles:
     receivers:
     - name: 'grafana-cloud-oncall'
       webhook_configs:
-      - url: 'https://oncall-prod-us-central-0.grafana.net/oncall/integrations/v1/alertmanager/iLimarTmvhqr8YnSdXy4WZcKl/'
+      - url: 'https://oncall-prod-us-central-0.grafana.net/oncall/integrations/v1/formatted_webhook/wX4yLsgiMmOvJCacy1OjXYw0G/'
         send_resolved: true
 
 # App Scrape Configuration
