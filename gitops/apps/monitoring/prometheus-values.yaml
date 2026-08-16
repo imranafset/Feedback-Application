@@ -5,10 +5,29 @@ server:
   ingress:
     enabled: false # Keep internal; access via Grafana
 
+# Enable Alertmanager to route alerts to Grafana Cloud OnCall
 alertmanager:
-  enabled: false # We use Grafana Alerting instead
+  enabled: true
+  persistentVolume:
+    enabled: false
 
-# This part is critical: it tells Prometheus to look for your app's metrics
+alertmanagerFiles:
+  alertmanager.yml:
+    global:
+      resolve_timeout: 5m
+    route:
+      group_by: ['alertname', 'namespace']
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 1h
+      receiver: 'grafana-cloud-oncall'
+    receivers:
+    - name: 'grafana-cloud-oncall'
+      webhook_configs:
+      - url: 'https://oncall-prod-us-central-0.grafana.net/oncall/integrations/v1/alertmanager/iLimarTmvhqr8YnSdXy4WZcKl/'
+        send_resolved: true
+
+# App Scrape Configuration
 extraScrapeConfigs: |
   - job_name: 'feedback-app'
     kubernetes_sd_configs:
