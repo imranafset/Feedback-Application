@@ -10,7 +10,7 @@ const pgPool = new Pool({
 
 async function startWorker() {
     try {
-        const connection = await amqp.connect('amqp://rabbitmq.feedback-dev.svc.cluster.local:5672');
+        const connection = await amqp.connect(process.env.RABBITMQ_URL);
         const channel = await connection.createChannel();
         await channel.assertQueue('feedback_queue', { durable: true });
 
