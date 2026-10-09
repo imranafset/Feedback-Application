@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: faizalaccount/feedback-backend:oncalltest
+          image: faizalaccount/feedback-backend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
