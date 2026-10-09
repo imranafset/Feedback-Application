@@ -1,9 +1,9 @@
 apiVersion: apps/v1
-kind: StatefulSet 
+kind: StatefulSet
 metadata:
   name: rabbitmq
 spec:
-  serviceName: "rabbitmq"
+  serviceName: rabbitmq
   replicas: 1
   selector:
     matchLabels:
@@ -16,8 +16,26 @@ spec:
       containers:
         - name: rabbitmq
           image: rabbitmq:3-management
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-auth
+                  key: username
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-auth
+                  key: password
           ports:
             - name: amqp
               containerPort: 5672
             - name: management
               containerPort: 15672
+          volumeMounts:
+            - name: rabbitmq-data
+              mountPath: /var/lib/rabbitmq
+      volumes:
+        - name: rabbitmq-data
+          persistentVolumeClaim:
+            claimName: rabbitmq-data

@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
   - statefulset.yaml
   - service.yaml
+  - pvc.yaml
   - sealed-rabbitmq-secret.yaml
-  
+  - sealed-rabbitmq-auth.yaml
