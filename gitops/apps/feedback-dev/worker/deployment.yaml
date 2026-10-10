@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: worker
-        image: faizalaccount/feedback-worker:latest
+        image: faizalaccount/feedback-worker:rabbitmq-auth-fix-20261010
         imagePullPolicy: Always
         env:
           - name: DB_HOST
